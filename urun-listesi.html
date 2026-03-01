@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ürünler — ATLAS SPOR</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--red:#E8000D;--red-dark:#B0000A;--black:#0A0A0A;--dark2:#1A1A1A;--white:#ffffff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#f5f5f5;color:#111;overflow-x:hidden;}
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:70px;background:#fff;border-bottom:2px solid rgba(232,0,13,0.15);box-shadow:0 2px 20px rgba(0,0,0,0.08);}
+.nav-logo{font-family:'Syne',sans-serif;font-size:24px;letter-spacing:4px;color:#0a0a0a;display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;}
+.nav-logo span{color:var(--red);}
+.nav-logo img{height:38px;width:auto;}
+.btn-cart{background:var(--red);color:white;border:none;padding:10px 24px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:background 0.2s;display:flex;align-items:center;gap:8px;}
+.btn-cart:hover{background:var(--red-dark);}
+.cart-count{background:white;color:var(--red);font-size:11px;font-weight:900;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+
+/* Hero banner */
+.cat-hero{background:#111;color:white;padding:48px 80px;position:relative;overflow:hidden;}
+.cat-hero::before{content:'';position:absolute;right:0;top:0;bottom:0;width:40%;background:linear-gradient(135deg,transparent,rgba(232,0,13,0.08));}
+.cat-hero-label{font-size:11px;color:var(--red);letter-spacing:4px;font-weight:700;text-transform:uppercase;margin-bottom:8px;}
+.cat-hero-title{font-family:'Syne',sans-serif;font-size:56px;font-weight:800;line-height:1;}
+.cat-hero-sub{color:rgba(255,255,255,0.5);font-size:14px;margin-top:12px;}
+
+/* Layout */
+.list-layout{display:grid;grid-template-columns:260px 1fr;gap:0;padding:0 80px 80px;max-width:1400px;margin:0 auto;}
+
+/* Sidebar filters */
+.filters{padding:32px 32px 32px 0;}
+.filter-section{margin-bottom:28px;}
+.filter-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;color:#111;display:flex;justify-content:space-between;cursor:pointer;}
+.filter-option{display:flex;align-items:center;gap:10px;padding:6px 0;cursor:pointer;font-size:14px;color:rgba(0,0,0,0.7);transition:color 0.2s;}
+.filter-option:hover{color:var(--red);}
+.filter-option input[type=checkbox]{accent-color:var(--red);width:16px;height:16px;}
+.filter-option.active{color:var(--red);font-weight:700;}
+.price-range{display:flex;gap:8px;align-items:center;}
+.price-range input{width:80px;border:1px solid rgba(0,0,0,0.15);padding:8px;font-family:'DM Sans',sans-serif;font-size:13px;}
+.btn-apply{background:#111;color:white;border:none;padding:8px 16px;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;}
+.btn-apply:hover{background:var(--red);}
+.filter-divider{height:1px;background:rgba(0,0,0,0.08);margin-bottom:28px;}
+
+/* Products area */
+.products-area{padding:32px 0 0 32px;border-left:1px solid rgba(0,0,0,0.08);}
+.products-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+.products-count{font-size:14px;color:rgba(0,0,0,0.5);}
+.sort-select{border:1px solid rgba(0,0,0,0.15);padding:8px 12px;font-family:'DM Sans',sans-serif;font-size:13px;background:white;cursor:pointer;}
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.product-card{background:#fff;cursor:pointer;transition:transform 0.25s,box-shadow 0.25s;border:1px solid rgba(0,0,0,0.06);}
+.product-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.1);}
+.product-card:hover .prod-img{transform:scale(1.08);}
+.prod-img-wrap{height:200px;overflow:hidden;background:linear-gradient(135deg,#f0f0f0,#e8e8e8);display:flex;align-items:center;justify-content:center;position:relative;}
+.prod-img{font-size:80px;transition:transform 0.4s;filter:drop-shadow(0 8px 16px rgba(0,0,0,0.15));}
+.prod-badge{position:absolute;top:10px;left:10px;background:var(--red);color:white;padding:3px 10px;font-size:10px;font-weight:900;letter-spacing:2px;clip-path:polygon(0 0,100% 0,calc(100% - 6px) 100%,0 100%);}
+.prod-info{padding:16px;}
+.prod-brand{font-size:10px;color:var(--red);letter-spacing:2px;font-weight:700;text-transform:uppercase;}
+.prod-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-top:4px;line-height:1.3;color:#111;}
+.prod-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+.prod-price{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--red);}
+.prod-old{font-size:13px;color:rgba(0,0,0,0.3);text-decoration:line-through;margin-left:4px;}
+.btn-add{background:#111;border:none;color:white;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);transition:background 0.2s;opacity:0;}
+.product-card:hover .btn-add{opacity:1;}
+.btn-add:hover{background:var(--red);}
+
+/* Cat tabs */
+.cat-tabs{display:flex;gap:4px;padding:16px 80px 0;background:#fff;border-bottom:1px solid rgba(0,0,0,0.08);}
+.cat-tab{padding:12px 20px;background:transparent;border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;color:rgba(0,0,0,0.5);position:relative;transition:color 0.2s;}
+.cat-tab::after{content:'';position:absolute;bottom:-1px;left:0;right:100%;height:3px;background:var(--red);transition:right 0.3s;}
+.cat-tab.active{color:#111;}
+.cat-tab.active::after{right:0;}
+.cat-tab:hover{color:#111;}
+
+/* Cart sidebar */
+.cart-sidebar{position:fixed;top:0;right:-420px;bottom:0;width:420px;background:#fff;border-left:1px solid rgba(0,0,0,0.1);z-index:200;transition:right 0.4s;display:flex;flex-direction:column;box-shadow:-8px 0 32px rgba(0,0,0,0.1);}
+.cart-sidebar.open{right:0;}
+.cart-header{padding:24px;border-bottom:1px solid rgba(0,0,0,0.1);display:flex;justify-content:space-between;align-items:center;}
+.cart-header h3{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;letter-spacing:2px;}
+.close-cart{background:none;border:1px solid rgba(0,0,0,0.2);color:#111;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.close-cart:hover{background:var(--red);border-color:var(--red);color:white;}
+.cart-items{flex:1;overflow-y:auto;padding:24px;}
+.cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:rgba(0,0,0,0.3);font-size:14px;gap:12px;}
+.cart-item{display:flex;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(0,0,0,0.07);align-items:center;}
+.cart-item-img{width:70px;height:70px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0;}
+.cart-item-info{flex:1;}
+.cart-item-name{font-size:14px;font-weight:600;color:#111;}
+.cart-item-price{color:var(--red);font-weight:700;margin-top:4px;font-size:15px;}
+.cart-item-remove{background:none;border:none;color:rgba(0,0,0,0.3);font-size:18px;cursor:pointer;}
+.cart-item-remove:hover{color:var(--red);}
+.cart-footer{padding:24px;border-top:1px solid rgba(0,0,0,0.1);}
+.cart-total{display:flex;justify-content:space-between;margin-bottom:16px;}
+.cart-total span{font-size:14px;color:rgba(0,0,0,0.5);}
+.cart-total strong{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--red);}
+.btn-checkout{background:var(--red);color:white;border:none;padding:16px;font-family:'Syne',sans-serif;font-size:16px;font-weight:800;letter-spacing:2px;cursor:pointer;width:100%;transition:background 0.2s;}
+.btn-checkout:hover{background:var(--red-dark);}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:150;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.overlay.show{opacity:1;pointer-events:all;}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:#111;color:white;border-left:4px solid var(--red);padding:14px 28px;font-size:14px;font-weight:600;z-index:300;transition:transform 0.4s;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+@media(max-width:900px){
+  nav{padding:0 16px;}
+  .cat-hero{padding:32px 20px;}
+  .cat-hero-title{font-size:36px;}
+  .cat-tabs{padding:0 16px;overflow-x:auto;}
+  .list-layout{grid-template-columns:1fr;padding:0 16px 60px;}
+  .filters{padding:20px 0;display:none;}
+  .products-area{padding:20px 0 0 0;border-left:none;}
+  .products-grid{grid-template-columns:1fr 1fr;gap:10px;}
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="toast" id="toast">✓ Sepete eklendi</div>
+
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>SEPETİM</h3>
+    <button class="close-cart" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"><div class="cart-empty">🛒<br>Sepetiniz boş</div></div>
+  <div class="cart-footer">
+    <div class="cart-total"><span>TOPLAM</span><strong id="cartTotal">₺0</strong></div>
+    <button class="btn-checkout" onclick="goToCheckout()">SİPARİŞİ TAMAMLA →</button>
+  </div>
+</div>
+
+<nav>
+  <a href="atlas-spor.html" class="nav-logo">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAjcAAAIBCAYAAAC1C54eAAAbq0lEQVR4nO3dSXIjO7IF0NCzP8259r+6nGsB+QdpLDVJiWQQjTfnmJXZG1WSAYfjEgCp4wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABp52f0CAIB6fh+//lz++/V4W5o3hBsA4Gkfw8w1KwPOf6v+IQCgplvBZrX/2/0CAIA8ogWZa4QbAOCmDKHmwrEUAPCjTMHmOOzcAAAfZAsy1wg3AECJUHPhq+AA0NiKULP6d27s3ABAI5V2aL4j3ABAAx1CzYVwAwAFdQozX7lzAwCFRAs1q+/bHIedGwAoIVqo2Um4AYCEhJnv+YViAEgmS7DZcSR1HHZuACC0LEEmEuEGAAISas4TbgAgEKHmecINAGwkzIwn3ADABkLNPMINACwi0Kwh3ADARALNesINAEwg1Owj3ADAAMJMHH6hGACeJNj8a9evEx+HnRsAOEWgiWtbqgKATISZ++3ctTkOx1IAcJNgk4twAwCUItwAAKUINwBww+47JDxGuAGAO7weby9CTg4GCQCe5MLxZ7tDoJ0bAHjS7sWczwwGAAzUfRcnQtCzcwMAA0VY3LsTbgBgMAFnL+EGACbw7ap9hBsAmEjAWU+4ASCk7hdzM4oS5IQbAEL5ffz6cwk2VQJOlEW/Cw8bgG1uhZdqoaBKWLsm0lj93+4XAEA/9yzykRZLcnEsBcAyH4+cOhLY1rBzA8A0nYPMd16PtxfPZS47NwBM8cwCboeDZ9i5AeBpdiKIxM4NAKfNuEPTYdemw3vcyc4NAA+btVNj0WcE4QaAmxw7jedi8TyOpQD4kQWYbGz/AfA/u4NMx2Op3c98hGjj5lgKgBILLFwINwCNRQo10T79c5+I4ybcADQRKcjATC4UAzQg2NCJnRuAgoQZOhNuAAoRakC4AShBqIF3wg1AQhXDzO/j15+I37whHxeKARKZ8Ycq2StzoIv62u3cAAQnzMBjhBuAYIQZeI5jKQCgFDs3AJvYoeHi9Xh7UQ/j2LkB2MBCBvPYuQFYSKihiqjflDoO4QZgGkEG9nAsBTCBYENlkXdtjsPODcAQwgzEIdwAnCTQQEyOpQBOEGwgLjs3ADcIMpCLcAPwDaEGcnIsBfCFv7y9j+fOCHZugPYsqFCLnRugNcEG6rFzA7QhyMQX/cfhyEG4AcoTamCcDAFUuAHKEmqgJ+EGKEOYAY5DuAGKEGzIbGf9Xjtmyj6fhBsgneyNFz6KWM+vx9vLtdeV4b7NcQg3QCKrFoHvGjtUcG9AyRJkrhFugPBGBI1HG/UzjV0wIqLMYeVRbd4okMfIcBCloQs8t0UZq9VW1Ea3Z9vqzQKxPdvkuzTwikGpy9hdM3M8uz7Xlm8aiGFUU+/awC+yh53O4yfYzOHODbCcUDPW5TlkDzkwisYALOXoab4sIaf7WM4ep87P184NMMWMxt25WT8iw1fZjSUzKS5guNELq4VwDt/S2cezn8vODTCEnZp8fvrZfc+ezIQb4BT3BWry3KlAuAFCsbgCzxJugJtW/k2nFf8OUJtwA1y18ts2Qg2dRP8mWwX/7X4BQDyaL8xhbq1h5waa291s7doAowk30NjOYCPUALMIN9DI7l2aC8GGjqLMvw6EG2ggUlMVbIDZNBkoTKiBGHbNxa7zzs4NFBEpyHzVtcHCccSem1X5KjgUELl5CjbAapoOJBQ5zHwk2MD++dpxHjqWgiR2N8hHdWyo8FW2eVuFYylIIFuDFGwg37ytxM4NBJO9IQo2ZPXd3Hu0prPP4Qo0IQgke1MUbMjq3rl3q8YjzuGO87LdG4ZoIjbDMzo2UGp4Zg6+Hm8v0edwx7nZ7g3DbtEb4Rkdmyf5VZyL13Scny4Uw0IVm2nHxgmZVOw7t7hQDJN0aChVg82tsav6vrvoMDe7M0FhsC6Ns9oCf2bcqj2DDrrMz6+61apjKRioS+Os1Ch/H7/+nB23LuNdhfHqo0yDgtW6NsrswWbWuGV/Lh10nbMXnWrUzg2c0LVJZm+OM8eta01kYXx6Sd2oYBWNMW+w2TF2WZ9VVebvX53qss0bhUdpiO8yNsUI45fxuVUToQ6i6FSPjqXgCg3xr9fj7SVjQ4wyflFeB3Tjd25ozwKUX+Qx/PjaMgZFyMhEo63IC+JumRbhbOOY6dlWkK0+ZulWd3ZuaEez+1mWJmgcge8IN5RnEbxf9GCTeSyjP1uoRLihtMyL4WrRF9+MYxn9mUJVJh5lZFz8ooi6CGce06jPtKvMtTRCt3q0c0N63ZvWs6I2vWzjGvU5QsfaFG5IK9viF1HEppdtXGc8Q18fh+cIN6SQbcHLINKimXF8Rz2/jO89o9fj7cWz7iNMc4PvaEhjRQo1x5FjfGc9s3vfe7QxyyxDvY3WsX7s3BBOx+bTUZZx3r1D03FhgmcJN4SRZbHLKsoimWGcRz6rDO+3E8dTPQg3bKfRzBch2EQe59mXgmGXCHN/h5Zvmn00/PV2N7foY7772Oknu8euuui1+azO9WPnhmWqN5JIojS1aGO++2LwI6KMIWQk3DBVtMWNNSKOu3s0fOX+TV0+GTCURrHX7k/70cY/c6DZPZadRKvbEbrXT+s3z1gVG0QWERpZhPGvcjE4wnh2E6F+R+peQ63fPOdVawSZ7W5iUWoh8sXgR+wez852j/0oasidG06o0gAyi9C8dtfB6Gew+/2wnzs4dWxvkORgwsfRPdhUDzURxre7aDXxCPXzl4fAVZknd1URmlb2UBO9riOMMX9Fr5XvqKG/PAT+kXVSVxSpUa2siyoXgx8Raax5F71uvlJHf3kIzWWbuJ1EaFKZvymUrbYjjDfXZaklNfTOg2gqy2TtJlJzWlUjmX+LZpRI4873oteXOnrnQTQUfYJ2FK0pragRoeZdtPHnZxHrTQ195mEUF3ES8lmkppQl1FSr60g1wH0i1aD6+ZffuSks0uTjsy7NqPrXtp/VpQ4q+jh21eqyAuGmCJMrj4gLWuS/aq22ic6P/8UTrsnyGBMql+rBRqB5TMR64Dx/XDUODyaxLgtAFREb0bM11PH3aEaJWA+MkfGbhtU4lkqiS8OvKmITihBs1DUVOabaL1zD5TMTJL8KwcbF4PEi1gVjzaxz9fMzOzdBaf7MsivYqOl3FiaeoX5u84CC0PjritSIHqkzx05zRKoH1oh4ab86OzcBWADYzcVgoBLhZjENn2ieDTZqGn426oKxXZv7eVCLWAB6qt6M1PXjqtcE33tmvqibx9i5mUzzpyJ1fY4FijPUzeOEm4E0fCpS1zDGmeMpweac/3a/gCosAFSkrsexSHEcj9WBmjnPzs1Jmj4VqWuYzy8YzycVPkhB8ogsn7zU9VxZ6oC1vpt36uV5dm7upPlTkbqGfT6GmN/Hrz9CzTjCzTc0fapR0xCXYDOWC8Vf/D5+/bEIMEqUWoryOgBWaL9zo+lTldoGqrrV39qGG42fqtR2LI4bYJx7+1u7cKPxA6sINjDOI+t36XAjyLDb6sVNzQMUvlCsybObT+0AYzy6ppcNN7DTjmAj0AP8VfpYClbbtVsj2ABVnelvZcONv93BbI6d+In6gH3KhhuYKcrCJcDDu6/zIco8Zb3yA6/5M0LEJqm244pYLx34Q5Q1OZa64lLUFgLOiNoU1TN8Zk7wUcjGPYvi514jQs1P9Xb2/18N5xA1FFd177wwLvmc7Xnld24+csmYa2Y0vBl1pnZzsICuZV7U9czYtpyEJgMXoxaiszV1699Xq/kIN2udmSPGKAfh5gSLRk8jm5oa4hoL51qzPliwn3DzBAtUfVmOnajBornOs/PQWMX2THA1sIeFqrLZF4PhKwvmGiPnpTGL55nxfT3eXlpdKP6Oi8Y12KFhN4tkTr+PX3+MXS0G8wMLWV7u0rCbxXGdmXPUOMbw7F0qOzcf2MHJZfc3nYB67OLsN6InCzdf+EXjuBw7ASsIOPkJN6TgYjBwHOvm8cd/R9BZ59mLxJf/NmA3WBDXG91IjCGzWfzW2DmXjfEao8KNnZsb3MNZR6gBorr0EyEnpq/jItzcQcCZy8Vg4JYo89txVQ7CzZ1cNB7HxWAAZpI6T7CQnudiMNX49D5fhjmvDp436r7NcQg3p2WYbLu5Q0N1FrT5Ms179XDe6L8T5ljqJPdwvifUAB25dLzHtect3DxBwPnMxWAAIWel756xcPOkzheN7dAAM2XvCX7peB/hhofZoQFmq9If7OLcNmOshZtBqh9R+avbAOcJOWt5yBNUWLz9Fg3cZqGao3qvUDefnR3vn56jBzxJ5snp2Alus0DN06V3qKGxv23zUfsHO1OWCWqXBh5jUZqnW+8Y+cOmGetyVrj57+z/KbdFL7TX4+0l+muEaMyZeboFm+P4+56fed+Zn9msYHMcLhRPF/GiseYM55g7zPLI7st3a4qvnr8TbhbY+Vs4Ch3OM39Y7VZAifZheYd75qWJu9jKwtzdmE1CMts9fzrRK8bJVLczviV1keYhVDJrIkcsak2LLCLOnw70iHGy1fDMcONYaoOR93CiF3PnP09BfNHnD1Q1e03wbalNRjTVTI0502ulBzW5nw89zGJyB3DPBK/SiDUzdqgyfyrRC8bKVOMzvwJ+YecmgFuDlalob6n0XshBzUE/Jj1b+NTGTKP/hIiANJb5P16mGp15kfgizcOgHg2OUUY39mu1mWnxiMy8nyNLfa44kjoO35Zio4i/3kw+zzZ1NbiOZ81Zj85z4YatfFWcR6zYoQHyE24IwS4Ot4z868ms5bmzmnBDGAIOXwk0cFuH+zaPEm4IRcDpzbFTPcaA41hfB8IN4Qg4PbkYDFxzpjek2MqiLwtWTSN3aFbUSJZt/6jM47ky1OeK37b5yM4NodnFqSVbqDmOHAsH8JlwQ3gCTn4uBkNfO+auTySkYoHLocrFYLs2Y5m/42Wo0VW/SvyRnRtgKBeDgYsdweY4hBuScUQVS8Y7NFBFhl2bXYQb0vEnG/YTajjDhxNWEW6Au3W6GOxT8RwCTh+7jqSOQ7ghMTs481W5GPwowWYuAYfZhBvS0yjH67RDA8Qyov8IN5Qg4Dxv1G6FcQB2E24owzHV47oeO/3EkdQa5iszCTeUYxfnNsdOwEy7+4NPKJS1e3JF4qvb97Frs0flmpopar0+O54j3lfIBwOjdG+a7tHcL+pC0UWHGhspcr3u/Ar4hWMpSut6ROXYiWy6zlXejfwwJtxQXvWLizM+wVV9VsBcu3vH5d8XbiAxOzRUYvfmPpGPpKIQbmijwg6Oi8FzWCziEHAY4b/dLwBWy7iQvR5vLyPPoy0e7zLWQ3XGpJ/RY27nhpayfDp07ERXWeYo7yKNl3BDW9GOqVwMhs8EHB7xsVaEGwjADs0ejj/iE3A+i1qzEX7b5iPhhvZ27eD4gT24j4DDo0ImQNhlZgP1RypjifoJmO+p+bh1e3ZsZn3Is3MDH8z6hPjsBNbUwQ4O112rCeEGvni2gdqhiS/qp19uE3C4h9+5gSvOLn6jf4tGE4d/CaexROxTdm7gG/d+QnQxOBcLYw12cPiJSQ53+NhEHTvlJdjU023+RKvhCEf47tzASXZnICY7OFzjzg0sogHDHCP/9lpk0d5j1F2b47BzA1MJNHFEWxjgEer3McINDCbQwB7R/l4cc/00zo6lYBBf3YYY7HLEtmJ87NzACUJMLha7flw07s3ODTxIw8xFsOmry0XjHXb3wVv/vnADd3LsBDkJOGNl6IOOpeCKDJMXuJ9jqhhWBU07N/CFBgg12cHZa+Xzt3NDe8JMXRYzvrKDk9894yfc0JLmBn35PZzzdj+ze/99x1K0s3tysoZdG27JUiNZXmckdm4oTZABfuKYqiY7N5SlYfXlky6P8Hs494nwhzLvZeeGMoQZ4BkRd3GErnOEG1KL1oiA3Fw2vi7Crs0jr8GxFGlpPsAsdkxys3NDGsIMsNLuY6oKAWvXexBuCE+o4REVFgTi+FhPetE+jz574YaQNBHOEGyYafdODvcTbghBwwAy6Bhwdr/fM/++cMN2uycOwCM6HVVlfX/CDctlnSwAX3XcybnXzmNi4YZlNACgIr+N86/d99/8zg3T/T5+/THpger8GYc5zjxTg8BQQgy7WFSIZEQv3F3TEX6V+KN7Xs/l33UsxTCCDcBfjqrGeyQwCTecZtIC/OzshePduzbPiPDahRseItAAPCbjLk6m13qNcMPdshc7wE73/j5OhJ2P7IQbrhJkAOaJ/Ps40S4SnyHc8I+oEw6+E6WhwiPU7TzCDcIMAE+LFNaEm6YEGgCq8gvFDQk2VBLp0yIQg52b4gQZAO5VZc2wc1NYlSIFYL5Ka4ZwA6TlSApiiDYXHUsB6URrpFl898nc86QaBV1YpS1GerP4Pu9WP/CMe6vww30f2bkpLPIvYMI9IjbNqj72Cs+dCJ4J5Aq4AQGHTCysc3T7y9Q8JsrOzbPr1eW1uFDcgAZFdK/H28vlf7tfC+98MOKWSMHmI+GmCYsGUanN2H4fv/4IObVFGN/Rr8Gdm0Yui0iEQqYnQSav38evP8aPLOzcNKRBsdroIycBfQ+7OPVEuGszo6bs3DTlm1SsMDpIf6zZy38L6+t59kQn3DQm4DDarMXupzp1XLKPZ99X9HEXbpoTcBjBkVNffh+HiIQbXDTmYTt2aIjPTg5RCDfA3WYsXCMCjUU1Dvdx8ojwYWLWaxBu+B9HVFwz81IwdTmuii3CPJz5GoQbPnFExcyFSF1BfhnCqnDDVXZxenIxmBns4rCacMO3BJweHDuxkvtR+0X44b7ZUrxI9rNg1RL1YvCzsjTe1SKMzVfGap8o4WZ0XX58bXZuuItdnBoi/1w6vTiqyifTOAk33E3AycVv0ZCFo6p+ZvcR4YaHCDg5RN46hmv8Ps4aXeazcMPDBJx4XAqmCiGnvhn95Wu9/Df6H6CH1+PtRfPZb8Y4CDZEoA7H6/RM7dxAQlW/7fQsdzdqsYsTR7YxSPViiavCwhjViqZSbfyyNeLZKoyvMX3e2TrIcIfv62tULAxToYFGsrKZVxs7C+FnxpfjqFcHP3HnhmE0nHFWP0tjRya/j19/Oi3UI3R7Xhoaw3WbRM+KFCyqjF2kZxpBlXG9xljfp3INXKMomKLbRDorYmOuMnYRn+0OVcbzHsb8e53q4DiEGybrNqFuydR8s49dpmc9U/ZxPMPYf9axBty5YSpN5v23aLI9i2yv96uODZ2/jD3CDdNlXySfkf29Z3/90F3XoKdxsUz1SVY5CGQeu8rjco/MY/eM7uN+0XX87dywTOVmU/m9HUf99wfU4s8vsNRlkcz+aaLjYl9l7Kit49zkX3Zu2CJjA8p6MXi07u+fuNQmF8IN22RqRJle6wqZnkfnnaZO7z1TTa7Safy/UgxsF20CapL3izZ2P+k4rpnG54yOY/qI6uP/Ezs3bBelQTlyepznxS5q77bOz6jtGyem1Z80Ok/+0aJ/Suw41tHH5IyO48jjFAnhzG7ImuM8kRfTjuMeeTwe1XH8OM+xFOHMamKOnSAn85ZHKRjCevZTp4a4T8Qdg471EHEc7tVxvBjHzg1hnW1udmj2i/j8My/03USsH3JRQIR3z6KkGcYULVB0q5Noz/+WbuPDPAqJNL42ao0wh0gLbLeaifTsv9NtTFhDUQHTRVlkuy2kUZ77d7qNB+soLGCZCIttpwU1wvO+ptMYsIcLxcAyFrXeXPZnFeEGWMri1o9Qw2r/t/sFAP1cFrqoxyaMIdCwi50bAIYTbNjJzg2wjR2cWgQaorBzA2xnUczPGP7s9/HrjxC/jp0bAJ4i2HwmxOxn5wYIwTdq8jFm/7oVbASfNezcAKG8Hm8vFgAyeaRehcE1hBsgHAEnNgv0X2o0LsdSQEgW0HgcQ70TbGKzcwOEZQcnju6hRh3mItwAofktnL26h5rjGFd7nuU6jqWAFCwM63V/5n6bJi87N0Aajqnu9+xz6hhs1FYdwg2QioAzT8dAczG7pjo/2x2EGyAdAYcR1FBdwg2QkoAzTrddBXVTn3ADpOWbVM/pFmqOQ610IdwA6dnF+eyeZ9El2KiLnoQboAQB57YugeZCPfTld26AMm4t3l0W92vvs8t7Pw6/T8NxtCl2oI+vC1unhb2r6GFGDa7lYQOQVvRQcyHcrOXODQCpZAk07OPODQBpZAw2dm3W88ABCC1joLkQbPZwLAVAOJkDDfs5lgIgFMGGZ9m5AWA7gYaR7NwAsJVgw2h2bgDYQqhhFuEGgGUEGlZwLAXAEoINq9i5AWAqoYbVhBsAphBq2MWxFADDCTZ+nXgnOzcADCHQEIWdGwCeJtgQiZ0bAE4TaojIeSAADxNqfua+zV6OpQB4iGBDdJIlAHcRau5j12Y/OzcA3CTYkIlwA8CPBBuy8W0pAK4SasjKzg0A/xBsyMzODQD/I9RQgZ0bAI7jEGyoQ7gBQLChFOEGoDnBhmqEG4DGBBsqEm4AmhJsxvPrxDEINwANCTZUJtwANCPYUJ1wA9CIYDOPI6k4hBsAoBS/UAzQgB0bOrFzAwCUItwAFGfXhm6EG4DCBBs6Em4AihJs6Eq4AYAn+Rp4LMINQEF2behMuAEoRrChO+EGAChFuAEoxK4NCDcA8BSXieMRbgCKsGsDfwk3AAUINvBOuAGAkxxJxSTcAAClCDcAQCnCDQBQinADUIC7H/BOuAEoQsCBv4QbgEIEHBBuAMp5Pd5ehBw6E24AihJw6Eq4AShMwKEj4QagOAFnDs81LuEGoAELMZ0INwBNCDjjeJaxCTcAjViU6UC4AWjGV8WpTrgBaErAoSrhBqAxAYeKhBuA5gQcqhFuABBwKEW4AeA4DgHnXp5TfMINAP/jm1RUINwA8A8Bh8yEGwCuEnDISrgB4FsCDhkJNwD8SMAhGwULwN1+H7/+7H4NOwl6Odi5AQBKkUABeFjHHRy7NnnYuQHgYRZ6IhNuADhFwCEq4QaA0/yiMREJNwBAKcINAE+zg0Mkwg0Awwg4RCDcADCUgMNuwg0Awwk47CTcADBFpYBT6b10INwAMI2Lxuwg3AAwnYDDSsINAEsIOKwi3ACwTMaAk/E1dyfcALCUsMBswg0Aywk4zCTcALCFb1Ixi3ADAN8QvnISbgDYyg4Oowk3AIQg4DCKcANAGAIOIwg3AIQi4PAs4QaAcNzD4RnCDQBhCTicIdwAEJqAw6OEGwDCE3B4hGIBIJXfx68/K/4dgSovOzcAQCnCDQCprNhRsWuTm3ADQDq+Ks5PhBsA0hJwuEa4ASA1AYevhBsA0hNw+Ei4AaAEAYcL4QaAMlw05jiEGwAKEnB6E24AKOlswBGM8hNuACjLMVVPwg0AUIpwA0B5dnB6EW4AaEPA6UG4AaCVnwKO8FODcANAO0JMbcINAC19DTgCDwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0MD/A39cu8BMTvhoAAAAAElFTkSuQmCC" alt="Atlas Spor">
+    ATLAS <span>SPOR</span>
+  </a>
+  <button class="btn-cart" onclick="toggleCart()">
+    🛒 SEPET <span class="cart-count" id="cartCount">0</span>
+  </button>
+</nav>
+
+<div class="cat-tabs" id="catTabs">
+  <button class="cat-tab" onclick="filterCat('all',this)" data-cat="all">Tümü</button>
+  <button class="cat-tab" onclick="filterCat('krampon',this)" data-cat="krampon">Krampon</button>
+  <button class="cat-tab" onclick="filterCat('halisaha',this)" data-cat="halisaha">Halı Saha</button>
+  <button class="cat-tab" onclick="filterCat('spor',this)" data-cat="spor">Spor Ayakkabı</button>
+  <button class="cat-tab" onclick="filterCat('forma',this)" data-cat="forma">Forma</button>
+  <button class="cat-tab" onclick="filterCat('aksesuar',this)" data-cat="aksesuar">Aksesuar</button>
+</div>
+
+<div class="cat-hero" id="catHero">
+  <div class="cat-hero-label" id="heroLabel">KATEGORİ</div>
+  <div class="cat-hero-title" id="heroTitle">TÜM ÜRÜNLER</div>
+  <div class="cat-hero-sub" id="heroSub">Koleksiyonumuzu keşfedin</div>
+</div>
+
+<div class="list-layout">
+  <!-- Sidebar -->
+  <div class="filters">
+    <div class="filter-section">
+      <div class="filter-title">MARKA</div>
+      <label class="filter-option"><input type="checkbox" onchange="renderProducts()"> Nike</label>
+      <label class="filter-option"><input type="checkbox" onchange="renderProducts()"> Adidas</label>
+      <label class="filter-option"><input type="checkbox" onchange="renderProducts()"> Puma</label>
+      <label class="filter-option"><input type="checkbox" onchange="renderProducts()"> Mizuno</label>
+      <label class="filter-option"><input type="checkbox" onchange="renderProducts()"> Atlas</label>
+    </div>
+    <div class="filter-divider"></div>
+    <div class="filter-section">
+      <div class="filter-title">FİYAT ARALIĞI</div>
+      <div class="price-range">
+        <input type="number" placeholder="Min" id="priceMin" value="0">
+        <span>—</span>
+        <input type="number" placeholder="Max" id="priceMax" value="10000">
+        <button class="btn-apply" onclick="renderProducts()">→</button>
+      </div>
+    </div>
+    <div class="filter-divider"></div>
+    <div class="filter-section">
+      <div class="filter-title">NUMARA</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        {['38','39','40','41','42','43','44','45'].map(s=>`<div onclick="toggleSize(this,'${s}')" style="width:42px;height:36px;background:#f0f0f0;border:1px solid rgba(0,0,0,0.12);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;" data-size="${s}">${s}</div>`).join('')}
+      </div>
+    </div>
+  </div>
+
+  <!-- Products -->
+  <div class="products-area">
+    <div class="products-toolbar">
+      <div class="products-count" id="productsCount">24 ürün</div>
+      <select class="sort-select" onchange="sortProducts(this.value)">
+        <option value="default">Sıralama: Önerilen</option>
+        <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
+        <option value="price-desc">Fiyat: Yüksekten Düşüğe</option>
+        <option value="new">En Yeniler</option>
+      </select>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+</div>
+
+<script>
+const allProducts = [
+  {id:1,name:'Mercurial Vapor Elite',brand:'Nike',price:3499,oldPrice:4299,emoji:'⚡',badge:'YENİ',cat:'krampon'},
+  {id:2,name:'Predator Accuracy+',brand:'Adidas',price:2999,oldPrice:null,emoji:'🔥',badge:'ÇOK SATAN',cat:'krampon'},
+  {id:3,name:'Future Ultimate FG',brand:'Puma',price:2799,oldPrice:3299,emoji:'💫',badge:'İNDİRİM',cat:'krampon'},
+  {id:4,name:'Copa Pure+ FG',brand:'Adidas',price:1899,oldPrice:null,emoji:'⚽',badge:'YENİ',cat:'krampon'},
+  {id:5,name:'Tiempo Legend 10',brand:'Nike',price:3199,oldPrice:3799,emoji:'👟',badge:'İNDİRİM',cat:'krampon'},
+  {id:6,name:'Mizuno Morelia Neo IV',brand:'Mizuno',price:2499,oldPrice:null,emoji:'🌟',badge:'YENİ',cat:'krampon'},
+  {id:7,name:'Phantom GX Elite TF',brand:'Nike',price:2399,oldPrice:2899,emoji:'🏃',badge:'İNDİRİM',cat:'halisaha'},
+  {id:8,name:'Copa Pure TF',brand:'Adidas',price:1499,oldPrice:null,emoji:'⚽',badge:'YENİ',cat:'halisaha'},
+  {id:9,name:'Future Play TF',brand:'Puma',price:1299,oldPrice:1599,emoji:'💪',badge:'İNDİRİM',cat:'halisaha'},
+  {id:10,name:'Predator Club TF',brand:'Adidas',price:1199,oldPrice:null,emoji:'🔥',badge:'YENİ',cat:'halisaha'},
+  {id:11,name:'Air Zoom Rival',brand:'Nike',price:2299,oldPrice:2799,emoji:'👟',badge:'İNDİRİM',cat:'spor'},
+  {id:12,name:'Ultraboost 23',brand:'Adidas',price:2799,oldPrice:null,emoji:'🌊',badge:'YENİ',cat:'spor'},
+  {id:13,name:'RS-X',brand:'Puma',price:1899,oldPrice:2299,emoji:'🎯',badge:'İNDİRİM',cat:'spor'},
+  {id:14,name:'Atlas Pro Forma',brand:'Atlas',price:899,oldPrice:1199,emoji:'👕',badge:'İNDİRİM',cat:'forma'},
+  {id:15,name:'Atlas Kaptan Forma',brand:'Atlas',price:749,oldPrice:null,emoji:'🧥',badge:'YENİ',cat:'forma'},
+  {id:16,name:'Atlas Kaleci Forması',brand:'Atlas',price:849,oldPrice:999,emoji:'🥅',badge:'İNDİRİM',cat:'forma'},
+  {id:17,name:'Krampon Çantası',brand:'Atlas',price:599,oldPrice:null,emoji:'🎒',badge:'YENİ',cat:'aksesuar'},
+  {id:18,name:'Grip Çorap (x3)',brand:'Atlas',price:299,oldPrice:399,emoji:'🧦',badge:'İNDİRİM',cat:'aksesuar'},
+  {id:19,name:'Krampon Bakım Spreyi',brand:'Atlas',price:199,oldPrice:null,emoji:'🧴',badge:'YENİ',cat:'aksesuar'},
+  {id:20,name:'Yedek Bağcık Seti',brand:'Atlas',price:149,oldPrice:199,emoji:'👟',badge:'İNDİRİM',cat:'aksesuar'},
+];
+
+let currentCat = 'all';
+let sortMode = 'default';
+let cart = [];
+
+function init() {
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get('kategori') || 'all';
+  currentCat = cat;
+  
+  // Activate tab
+  document.querySelectorAll('.cat-tab').forEach(t => {
+    if (t.dataset.cat === cat) t.classList.add('active');
+  });
+  
+  updateHero(cat);
+  renderProducts();
+}
+
+const catMeta = {
+  all: {label:'KOLEKSİYON', title:'TÜM ÜRÜNLER', sub:'500+ ürün — Her sporcuya özel seçenekler'},
+  krampon: {label:'FUTBOL', title:'KRAMPONLAR', sub:'Nike · Adidas · Puma · Mizuno — Elite seviye seçenekler'},
+  halisaha: {label:'HALİ SAHA', title:'HALI SAHA', sub:'TF · Futsal — Her zemin için doğru tercih'},
+  spor: {label:'LIFESTYLE', title:'SPOR AYAKKABI', sub:'Günlük kullanım için şık ve konforlu seçenekler'},
+  forma: {label:'GİYİM', title:'FORMALAR', sub:'Özel üretim · Kulüp formaları · Kaleci'},
+  aksesuar: {label:'AKSESUAR', title:'AKSESUARLAR', sub:'Çanta · Çorap · Bakım ürünleri'},
+};
+
+function updateHero(cat) {
+  const m = catMeta[cat] || catMeta.all;
+  document.getElementById('heroLabel').textContent = m.label;
+  document.getElementById('heroTitle').textContent = m.title;
+  document.getElementById('heroSub').textContent = m.sub;
+}
+
+function filterCat(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  updateHero(cat);
+  renderProducts();
+  // Update URL
+  const url = new URL(window.location);
+  url.searchParams.set('kategori', cat);
+  history.pushState({}, '', url);
+}
+
+function sortProducts(mode) {
+  sortMode = mode;
+  renderProducts();
+}
+
+function renderProducts() {
+  let filtered = currentCat === 'all' ? [...allProducts] : allProducts.filter(p => p.cat === currentCat);
+  
+  const minP = parseInt(document.getElementById('priceMin').value)||0;
+  const maxP = parseInt(document.getElementById('priceMax').value)||99999;
+  filtered = filtered.filter(p => p.price >= minP && p.price <= maxP);
+  
+  if (sortMode === 'price-asc') filtered.sort((a,b) => a.price - b.price);
+  if (sortMode === 'price-desc') filtered.sort((a,b) => b.price - a.price);
+  if (sortMode === 'new') filtered = filtered.filter(p => p.badge==='YENİ').concat(filtered.filter(p => p.badge!=='YENİ'));
+  
+  document.getElementById('productsCount').textContent = filtered.length + ' ürün';
+  
+  const grid = document.getElementById('productsGrid');
+  grid.innerHTML = filtered.map(p => `
+    <div class="product-card" onclick="goToProduct(${p.id})">
+      <div class="prod-img-wrap">
+        <div class="prod-img">${p.emoji}</div>
+        <div class="prod-badge">${p.badge}</div>
+      </div>
+      <div class="prod-info">
+        <div class="prod-brand">${p.brand}</div>
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-bottom">
+          <div>
+            <span class="prod-price">₺${p.price.toLocaleString('tr-TR')}</span>
+            ${p.oldPrice?`<span class="prod-old">₺${p.oldPrice.toLocaleString('tr-TR')}</span>`:''}
+          </div>
+          <button class="btn-add" onclick="event.stopPropagation();addToCart(${p.id})">+</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleSize(el, size) {
+  el.style.background = el.style.background === 'rgb(26, 26, 26)' ? '#f0f0f0' : '#1a1a1a';
+  el.style.color = el.style.color === 'white' ? '#111' : 'white';
+  el.style.borderColor = el.style.borderColor === 'rgb(232, 0, 13)' ? 'rgba(0,0,0,0.12)' : 'rgb(232, 0, 13)';
+}
+
+function goToProduct(id) {
+  window.location.href = 'urun-detay.html';
+}
+
+function addToCart(id) {
+  const p = allProducts.find(x => x.id===id);
+  const ex = cart.find(x => x.id===id);
+  if(ex) ex.qty=(ex.qty||1)+1; else cart.push({...p,qty:1});
+  updateCart();
+  showToast(p.name+' sepete eklendi!');
+}
+
+function updateCart() {
+  document.getElementById('cartCount').textContent = cart.reduce((s,i)=>s+(i.qty||1),0);
+  const total = cart.reduce((s,i)=>s+i.price*(i.qty||1),0);
+  document.getElementById('cartTotal').textContent = '₺'+total.toLocaleString('tr-TR');
+  const el = document.getElementById('cartItems');
+  if(!cart.length){el.innerHTML='<div class="cart-empty">🛒<br>Sepetiniz boş</div>';return;}
+  el.innerHTML = cart.map((item,i)=>`
+    <div class="cart-item">
+      <div class="cart-item-img">${item.emoji}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name} ${(item.qty||1)>1?'x'+(item.qty||1):''}</div>
+        <div class="cart-item-price">₺${(item.price*(item.qty||1)).toLocaleString('tr-TR')}</div>
+      </div>
+      <button class="cart-item-remove" onclick="removeItem(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function removeItem(i){cart.splice(i,1);updateCart();}
+
+function toggleCart(){
+  document.getElementById('cartSidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+function closeCart(){
+  document.getElementById('cartSidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent='✓ '+msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+function goToCheckout(){
+  sessionStorage.setItem('atlasCart',JSON.stringify(cart.map(i=>{return {name:i.name,price:i.price,emoji:i.emoji,qty:i.qty||1};})));
+  window.location.href='odeme.html';
+}
+
+init();
+</script>
+</body>
+</html>
