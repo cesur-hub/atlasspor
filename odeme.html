@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ödeme — ATLAS SPOR</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--red:#E8000D;--red-dark:#B0000A;--black:#0A0A0A;--dark:#111111;--dark2:#1A1A1A;--white:#ffffff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#f5f5f5;color:#111111;overflow-x:hidden;}
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:70px;background:#ffffff;border-bottom:2px solid rgba(232,0,13,0.15);box-shadow:0 2px 20px rgba(0,0,0,0.08);}
+.nav-logo{font-family:'Syne',sans-serif;font-size:24px;letter-spacing:4px;color:#0a0a0a;display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;}
+.nav-logo span{color:var(--red);}
+.nav-logo img{height:38px;width:auto;}
+.nav-steps{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:2px;}
+.step{padding:6px 16px;border:1px solid rgba(0,0,0,0.15);color:rgba(0,0,0,0.4);}
+.step.active{background:var(--red);color:white;border-color:var(--red);}
+.step.done{background:#111;color:white;border-color:#111;}
+.checkout-layout{display:grid;grid-template-columns:1fr 420px;gap:24px;padding:32px 80px;max-width:1300px;margin:0 auto;}
+.checkout-main{display:flex;flex-direction:column;gap:24px;}
+.card{background:#ffffff;padding:28px;border:1px solid rgba(0,0,0,0.08);}
+.card-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.card-title span{background:var(--red);color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:900;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.form-row.full{grid-template-columns:1fr;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,0,0,0.5);}
+.form-group input,.form-group select{border:2px solid rgba(0,0,0,0.12);padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;background:#fff;color:#111;transition:border-color 0.2s;outline:none;}
+.form-group input:focus,.form-group select:focus{border-color:var(--red);}
+.form-group input::placeholder{color:rgba(0,0,0,0.3);}
+
+/* Payment methods */
+.payment-methods{display:flex;flex-direction:column;gap:10px;}
+.pay-method{display:flex;align-items:center;gap:14px;padding:16px;border:2px solid rgba(0,0,0,0.1);cursor:pointer;transition:all 0.2s;}
+.pay-method.selected{border-color:var(--red);background:rgba(232,0,13,0.03);}
+.pay-method-radio{width:20px;height:20px;border-radius:50%;border:2px solid rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;}
+.pay-method.selected .pay-method-radio{border-color:var(--red);background:var(--red);}
+.pay-method.selected .pay-method-radio::after{content:'';width:8px;height:8px;border-radius:50%;background:white;}
+.pay-method-icon{font-size:24px;}
+.pay-method-info strong{font-size:14px;font-weight:700;display:block;}
+.pay-method-info span{font-size:12px;color:rgba(0,0,0,0.5);}
+.card-fields{margin-top:16px;display:none;}
+.card-fields.show{display:block;}
+.card-icons{display:flex;gap:8px;margin-bottom:12px;font-size:22px;}
+.installment-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px;}
+.installment-table th{background:#111;color:white;padding:8px 12px;text-align:left;font-size:11px;letter-spacing:2px;}
+.installment-table td{padding:10px 12px;border-bottom:1px solid rgba(0,0,0,0.07);}
+.installment-table tr:hover td{background:rgba(232,0,13,0.03);}
+.installment-table tr.best td{background:rgba(232,0,13,0.05);font-weight:700;}
+.installment-best-badge{background:var(--red);color:white;font-size:9px;padding:2px 6px;font-weight:900;letter-spacing:1px;margin-left:6px;}
+
+/* Order summary */
+.order-summary{background:#ffffff;border:1px solid rgba(0,0,0,0.08);position:sticky;top:90px;height:fit-content;}
+.summary-header{padding:20px 24px;border-bottom:1px solid rgba(0,0,0,0.08);font-family:'Syne',sans-serif;font-size:18px;font-weight:800;}
+.summary-items{padding:20px 24px;display:flex;flex-direction:column;gap:14px;max-height:280px;overflow-y:auto;}
+.summary-item{display:flex;gap:12px;align-items:center;}
+.summary-item-img{width:56px;height:56px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:1px solid rgba(0,0,0,0.08);position:relative;}
+.item-qty-badge{position:absolute;top:-6px;right:-6px;background:var(--red);color:white;font-size:10px;font-weight:900;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.summary-item-name{font-size:13px;font-weight:600;flex:1;line-height:1.4;}
+.summary-item-price{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--red);}
+.summary-totals{padding:16px 24px;border-top:1px solid rgba(0,0,0,0.08);display:flex;flex-direction:column;gap:10px;}
+.summary-row{display:flex;justify-content:space-between;font-size:14px;}
+.summary-row.discount{color:var(--red);}
+.summary-row.total{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;padding-top:10px;border-top:2px solid #111;margin-top:4px;}
+.coupon-row{padding:16px 24px;border-top:1px solid rgba(0,0,0,0.08);display:flex;gap:8px;}
+.coupon-input{flex:1;border:2px solid rgba(0,0,0,0.12);padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;}
+.coupon-input:focus{border-color:var(--red);}
+.btn-coupon{background:#111;color:white;border:none;padding:10px 16px;font-size:12px;font-weight:700;letter-spacing:2px;cursor:pointer;white-space:nowrap;}
+.btn-coupon:hover{background:var(--red);}
+.btn-complete{background:var(--red);color:white;border:none;padding:18px;font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:2px;cursor:pointer;width:100%;transition:all 0.2s;margin:0 24px 24px;width:calc(100% - 48px);display:block;}
+.btn-complete:hover{background:var(--red-dark);transform:translateY(-1px);box-shadow:0 8px 24px rgba(232,0,13,0.3);}
+.secure-badges{display:flex;justify-content:center;gap:16px;padding:0 24px 20px;}
+.secure-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(0,0,0,0.4);font-weight:600;}
+
+/* Success overlay */
+.success-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:none;align-items:center;justify-content:center;}
+.success-overlay.show{display:flex;}
+.success-card{background:white;padding:60px;text-align:center;max-width:500px;width:90%;animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes popIn{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+.success-icon{font-size:72px;margin-bottom:16px;}
+.success-card h2{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;margin-bottom:12px;}
+.success-card p{color:rgba(0,0,0,0.6);line-height:1.7;margin-bottom:24px;}
+.order-number{background:#f5f5f5;padding:12px 24px;font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--red);margin-bottom:24px;display:inline-block;letter-spacing:3px;}
+
+@media(max-width:900px){
+  nav{padding:0 16px;}
+  .nav-steps{display:none;}
+  .checkout-layout{grid-template-columns:1fr;padding:16px;}
+  .order-summary{position:static;}
+  .form-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- Success Overlay -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-card">
+    <div class="success-icon">🎉</div>
+    <h2>SİPARİŞİNİZ ALINDI!</h2>
+    <p>Teşekkürler! Siparişiniz başarıyla oluşturuldu. Kargo bilgileriniz WhatsApp ve e-posta ile iletilecektir.</p>
+    <div class="order-number" id="orderNumber">AS-000000</div>
+    <button onclick="window.location.href='atlas-spor.html'" style="background:var(--red);color:white;border:none;padding:14px 40px;font-family:'Syne',sans-serif;font-size:16px;font-weight:800;letter-spacing:2px;cursor:pointer;width:100%;">ALIŞVERİŞE DEVAM ET</button>
+  </div>
+</div>
+
+<nav>
+  <a href="atlas-spor.html" class="nav-logo">
+    <img src="data:image/png;base64,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" alt="Atlas Spor Logo">
+    ATLAS <span>SPOR</span>
+  </a>
+  <div class="nav-steps">
+    <div class="step done">1 · SEPET</div>
+    <div style="color:rgba(0,0,0,0.2);">›</div>
+    <div class="step active">2 · ÖDEME</div>
+    <div style="color:rgba(0,0,0,0.2);">›</div>
+    <div class="step">3 · ONAY</div>
+  </div>
+  <div style="font-size:12px;color:rgba(0,0,0,0.4);font-weight:700;letter-spacing:1px;">🔒 GÜVENLİ ÖDEME</div>
+</nav>
+
+<div class="checkout-layout">
+  <!-- LEFT: Form -->
+  <div class="checkout-main">
+
+    <!-- Teslimat Bilgileri -->
+    <div class="card">
+      <div class="card-title"><span>1</span> TESLİMAT BİLGİLERİ</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Ad</label>
+          <input type="text" placeholder="Adınız" id="firstName">
+        </div>
+        <div class="form-group">
+          <label>Soyad</label>
+          <input type="text" placeholder="Soyadınız" id="lastName">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Telefon</label>
+          <input type="tel" placeholder="05XX XXX XX XX" id="phone">
+        </div>
+        <div class="form-group">
+          <label>E-posta</label>
+          <input type="email" placeholder="ornek@email.com" id="email">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>Adres</label>
+          <input type="text" placeholder="Mahalle, Sokak, Bina No, Daire" id="address">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>İl</label>
+          <select id="city">
+            <option value="">Seçiniz...</option>
+            <option>İstanbul</option><option>Ankara</option><option>İzmir</option>
+            <option>Bursa</option><option>Antalya</option><option>Adana</option>
+            <option>Konya</option><option>Gaziantep</option><option>Mersin</option>
+            <option>Kayseri</option><option>Trabzon</option><option>Samsun</option>
+            <option>Diğer</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>İlçe</label>
+          <input type="text" placeholder="İlçe" id="district">
+        </div>
+      </div>
+    </div>
+
+    <!-- Ödeme Yöntemi -->
+    <div class="card">
+      <div class="card-title"><span>2</span> ÖDEME YÖNTEMİ</div>
+      <div class="payment-methods">
+
+        <div class="pay-method selected" onclick="selectPayment(this,'card')">
+          <div class="pay-method-radio"></div>
+          <div class="pay-method-icon">💳</div>
+          <div class="pay-method-info">
+            <strong>Kredi / Banka Kartı</strong>
+            <span>Taksit imkânı mevcuttur</span>
+          </div>
+        </div>
+
+        <div class="pay-method" onclick="selectPayment(this,'transfer')">
+          <div class="pay-method-radio"></div>
+          <div class="pay-method-icon">🏦</div>
+          <div class="pay-method-info">
+            <strong>Banka Havalesi / EFT</strong>
+            <span>Havale sonrası kargo çıkar</span>
+          </div>
+        </div>
+
+        <div class="pay-method" onclick="selectPayment(this,'door')">
+          <div class="pay-method-radio"></div>
+          <div class="pay-method-icon">🚚</div>
+          <div class="pay-method-info">
+            <strong>Kapıda Ödeme</strong>
+            <span>Nakit veya kart — +₺30 hizmet bedeli</span>
+          </div>
+        </div>
+
+        <div class="pay-method" onclick="selectPayment(this,'whatsapp')">
+          <div class="pay-method-radio"></div>
+          <div class="pay-method-icon">💬</div>
+          <div class="pay-method-info">
+            <strong>WhatsApp ile Sipariş</strong>
+            <span>Sipariş bilgilerini WhatsApp'tan ilet</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kart Alanları -->
+      <div class="card-fields show" id="cardFields">
+        <div class="card-icons">💳 <span style="font-size:13px;color:rgba(0,0,0,0.4);align-self:center;">VISA · Mastercard · Troy</span></div>
+        <div class="form-row full">
+          <div class="form-group">
+            <label>Kart Numarası</label>
+            <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" id="cardNum" oninput="formatCard(this)">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Son Kullanma Tarihi</label>
+            <input type="text" placeholder="AA / YY" maxlength="7" id="cardExp" oninput="formatExp(this)">
+          </div>
+          <div class="form-group">
+            <label>CVV</label>
+            <input type="text" placeholder="•••" maxlength="3" id="cardCvv">
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group">
+            <label>Kart Üzerindeki İsim</label>
+            <input type="text" placeholder="AD SOYAD" id="cardName">
+          </div>
+        </div>
+
+        <!-- Taksit Tablosu -->
+        <div id="installmentSection" style="display:none;">
+          <div style="font-size:12px;font-weight:700;letter-spacing:2px;color:rgba(0,0,0,0.5);text-transform:uppercase;margin-bottom:8px;margin-top:4px;">TAKSİT SEÇENEKLERİ</div>
+          <table class="installment-table" id="installmentTable">
+            <thead><tr><th>TAKSİT</th><th>AYLIK</th><th>TOPLAM</th><th></th></tr></thead>
+            <tbody id="installmentBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Transfer Bilgileri -->
+      <div id="transferInfo" style="display:none;margin-top:16px;background:#f9f9f9;padding:20px;border:1px solid rgba(0,0,0,0.08);">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px;">BANKA BİLGİLERİ</div>
+        <div style="font-size:13px;line-height:2;color:rgba(0,0,0,0.7);">
+          <strong>Banka:</strong> Ziraat Bankası<br>
+          <strong>Hesap Adı:</strong> Atlas Spor Ltd. Şti.<br>
+          <strong>IBAN:</strong> TR00 0000 0000 0000 0000 000000<br>
+          <strong>Açıklama:</strong> Sipariş numaranızı açıklamaya yazınız.
+        </div>
+      </div>
+
+      <!-- Kapıda Ödeme -->
+      <div id="doorInfo" style="display:none;margin-top:16px;background:#f9f9f9;padding:20px;border:1px solid rgba(0,0,0,0.08);">
+        <div style="font-size:13px;color:rgba(0,0,0,0.7);line-height:1.8;">
+          🚚 Kargonuz kapınıza geldiğinde nakit veya POS cihazıyla ödeyebilirsiniz.<br>
+          ⚠️ Kapıda ödeme seçeneğinde +₺30 hizmet bedeli uygulanır.
+        </div>
+      </div>
+
+      <!-- WhatsApp -->
+      <div id="whatsappInfo" style="display:none;margin-top:16px;background:#f9f9f9;padding:20px;border:1px solid rgba(0,0,0,0.08);">
+        <div style="font-size:13px;color:rgba(0,0,0,0.7);line-height:1.8;margin-bottom:12px;">
+          💬 "Siparişi Tamamla" butonuna bastıktan sonra sipariş bilgilerinizle WhatsApp'a yönlendirileceksiniz.
+        </div>
+      </div>
+    </div>
+
+    <!-- Kargo -->
+    <div class="card">
+      <div class="card-title"><span>3</span> KARGO SEÇENEĞİ</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="pay-method selected" onclick="selectShipping(this,0)" id="ship1">
+          <div class="pay-method-radio" style="border-color:var(--red);background:var(--red);"><div style="width:8px;height:8px;border-radius:50%;background:white;"></div></div>
+          <div class="pay-method-icon">📦</div>
+          <div class="pay-method-info">
+            <strong>Standart Kargo — ÜCRETSİZ</strong>
+            <span>2–4 iş günü · Yurtiçi Kargo</span>
+          </div>
+        </div>
+        <div class="pay-method" onclick="selectShipping(this,59)" id="ship2">
+          <div class="pay-method-radio"></div>
+          <div class="pay-method-icon">⚡</div>
+          <div class="pay-method-info">
+            <strong>Hızlı Kargo — ₺59</strong>
+            <span>1 iş günü · Aynı gün çıkar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: Order Summary -->
+  <div class="order-summary">
+    <div class="summary-header">SİPARİŞ ÖZETİ</div>
+    <div class="summary-items" id="summaryItems">
+      <!-- Injected by JS -->
+    </div>
+    <div class="coupon-row">
+      <input class="coupon-input" placeholder="İndirim kodu" id="couponInput">
+      <button class="btn-coupon" onclick="applyCoupon()">UYGULA</button>
+    </div>
+    <div class="summary-totals">
+      <div class="summary-row"><span>Ara Toplam</span><span id="subtotal">₺0</span></div>
+      <div class="summary-row discount" id="discountRow" style="display:none;"><span id="discountLabel">İndirim</span><span id="discountAmt"></span></div>
+      <div class="summary-row"><span>Kargo</span><span id="shippingCost">Ücretsiz</span></div>
+      <div class="summary-row total"><span>TOPLAM</span><span id="grandTotal">₺0</span></div>
+    </div>
+    <button class="btn-complete" onclick="completeOrder()">SİPARİŞİ TAMAMLA →</button>
+    <div class="secure-badges">
+      <div class="secure-badge">🔒 SSL Güvenli</div>
+      <div class="secure-badge">✅ 256-bit Şifreleme</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Load cart from URL params or localStorage simulation
+let cartItems = [];
+let shippingCost = 0;
+let discountAmount = 0;
+let selectedPaymentMethod = 'card';
+
+// Demo items if no cart passed
+const demoItems = [
+  {name:'Mercurial Vapor Elite No:41', price:3499, emoji:'⚡', qty:1},
+  {name:'Krampon Çantası', price:509, emoji:'🎒', qty:1},
+];
+
+function init() {
+  // Try to load from sessionStorage
+  const saved = sessionStorage.getItem('atlasCart');
+  cartItems = saved ? JSON.parse(saved) : demoItems;
+  renderSummary();
+}
+
+function renderSummary() {
+  const el = document.getElementById('summaryItems');
+  el.innerHTML = cartItems.map(item => `
+    <div class="summary-item">
+      <div class="summary-item-img">
+        ${item.emoji}
+        <div class="item-qty-badge">${item.qty||1}</div>
+      </div>
+      <div class="summary-item-name">${item.name}</div>
+      <div class="summary-item-price">₺${(item.price*(item.qty||1)).toLocaleString('tr-TR')}</div>
+    </div>
+  `).join('');
+  updateTotals();
+}
+
+function updateTotals() {
+  const sub = cartItems.reduce((s,i) => s + i.price*(i.qty||1), 0);
+  const total = sub - discountAmount + shippingCost;
+  document.getElementById('subtotal').textContent = '₺' + sub.toLocaleString('tr-TR');
+  document.getElementById('grandTotal').textContent = '₺' + total.toLocaleString('tr-TR');
+  document.getElementById('shippingCost').textContent = shippingCost ? '₺'+shippingCost : 'Ücretsiz';
+
+  // Installment table
+  showInstallments(total);
+}
+
+function showInstallments(total) {
+  const body = document.getElementById('installmentBody');
+  const rates = [
+    {n:1, rate:0},
+    {n:2, rate:0.015},
+    {n:3, rate:0.02},
+    {n:6, rate:0.04},
+    {n:9, rate:0.07},
+    {n:12, rate:0.10},
+  ];
+  body.innerHTML = rates.map((r,i) => {
+    const tot = Math.round(total * (1+r.rate));
+    const monthly = Math.round(tot/r.n);
+    const isBest = i===2;
+    return `<tr class="${isBest?'best':''}">
+      <td>${r.n===1?'Tek Çekim':r.n+' Taksit'}${isBest?'<span class="installment-best-badge">POPÜLER</span>':''}</td>
+      <td>${r.n===1?'-':'₺'+monthly.toLocaleString('tr-TR')}</td>
+      <td>₺${tot.toLocaleString('tr-TR')}</td>
+      <td><input type="radio" name="installment" value="${r.n}" ${r.n===1?'checked':''}></td>
+    </tr>`;
+  }).join('');
+}
+
+function selectPayment(el, method) {
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPaymentMethod = method;
+  document.getElementById('cardFields').style.display = method==='card'?'block':'none';
+  document.getElementById('transferInfo').style.display = method==='transfer'?'block':'none';
+  document.getElementById('doorInfo').style.display = method==='door'?'block':'none';
+  document.getElementById('whatsappInfo').style.display = method==='whatsapp'?'block':'none';
+  document.getElementById('installmentSection').style.display = method==='card'?'block':'none';
+  if (method==='card') document.getElementById('cardFields').classList.add('show');
+}
+
+function selectShipping(el, cost) {
+  document.querySelectorAll('#ship1,#ship2').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  shippingCost = cost;
+  updateTotals();
+}
+
+function applyCoupon() {
+  const code = document.getElementById('couponInput').value.trim().toUpperCase();
+  if (code === 'ATLAS10') {
+    const sub = cartItems.reduce((s,i) => s + i.price*(i.qty||1), 0);
+    discountAmount = Math.round(sub * 0.10);
+    document.getElementById('discountRow').style.display='flex';
+    document.getElementById('discountLabel').textContent='Kupon (ATLAS10) -10%';
+    document.getElementById('discountAmt').textContent='-₺'+discountAmount.toLocaleString('tr-TR');
+    updateTotals();
+    alert('Kupon kodu uygulandı! %10 indirim kazandınız 🎉');
+  } else {
+    alert('Geçersiz kupon kodu. Deneme: ATLAS10');
+  }
+}
+
+function formatCard(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,16);
+  el.value = v.replace(/(.{4})/g,'$1 ').trim();
+  const section = document.getElementById('installmentSection');
+  if (v.length >= 6) section.style.display='block';
+}
+
+function formatExp(el) {
+  let v = el.value.replace(/\D/g,'');
+  if (v.length >= 2) v = v.substring(0,2)+' / '+v.substring(2);
+  el.value = v;
+}
+
+function validateForm() {
+  const required = ['firstName','lastName','phone','email','address','city','district'];
+  for (const id of required) {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) {
+      el.style.borderColor='var(--red)';
+      el.scrollIntoView({behavior:'smooth',block:'center'});
+      el.focus();
+      return false;
+    }
+    el.style.borderColor='';
+  }
+  if (selectedPaymentMethod === 'card') {
+    const cardNum = document.getElementById('cardNum').value.replace(/\s/g,'');
+    if (cardNum.length < 16) {
+      alert('Lütfen geçerli bir kart numarası girin.');
+      return false;
+    }
+  }
+  return true;
+}
+
+function completeOrder() {
+  if (!validateForm()) return;
+  
+  if (selectedPaymentMethod === 'whatsapp') {
+    const sub = cartItems.reduce((s,i) => s + i.price*(i.qty||1), 0);
+    const items = cartItems.map(i => i.name+' x'+( i.qty||1)+' = ₺'+i.price).join('%0A');
+    const name = document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value;
+    const phone = document.getElementById('phone').value;
+    const addr = document.getElementById('address').value + ', ' + document.getElementById('district').value + ', ' + document.getElementById('city').value;
+    const msg = `Merhaba Atlas Spor!%0A%0ASipariş vermek istiyorum:%0A%0A${items}%0A%0AToplam: ₺${(sub+shippingCost-discountAmount).toLocaleString('tr-TR')}%0A%0AAd Soyad: ${name}%0ATelefon: ${phone}%0AAdres: ${addr}`;
+    window.open('https://wa.me/905462637300?text='+msg, '_blank');
+    return;
+  }
+
+  // Show success
+  const orderNum = 'AS-' + Math.floor(100000 + Math.random()*900000);
+  document.getElementById('orderNumber').textContent = orderNum;
+  document.getElementById('successOverlay').classList.add('show');
+  sessionStorage.removeItem('atlasCart');
+}
+
+init();
+</script>
+</body>
+</html>
